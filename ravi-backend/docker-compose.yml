@@ -5,12 +5,9 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      # Mount your local config and key into the container
       - ./config.yaml:/app/config.yaml:ro
       - ./keys/service-account.json:/app/keys/service-account.json:ro
     environment:
-      # Tell the app where to find GCP creds
       - GOOGLE_APPLICATION_CREDENTIALS=/app/keys/service-account.json
-      # CONFIG_PATH is already set in Dockerfile but you can override if needed:
       - CONFIG_PATH=/app/config.yaml
     restart: unless-stopped
