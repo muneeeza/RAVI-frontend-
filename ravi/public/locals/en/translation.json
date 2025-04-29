@@ -1,0 +1,33 @@
+{
+    "RAVI": "RAVI",
+    "heroTitle" : "Urdu Textual Image Narrator",
+    "heroText": "Bring images to life with Urdu narration at the click of a button.", 
+    "btnText": "Get Started!",
+    "btnText2": "Upload",
+
+    "uploadSection":{
+         "title": "Accepted Formats: PDF, JPG, PNG",
+         "loading": "Processing...",
+         "heading": "Extracted Text",
+        "popUpHeading": "How to use RAVI?",
+        "helperText": "Upload an image with Urdu text. RAVI will read it aloud using audio."
+    },
+
+    "aboutSection": {
+        "Title": "How it <1>Works</1>?",
+        "part1": "How it",
+        "part2": " Works",
+        "part3": "?",
+        "content" : "Simply upload a photo, and let RAVI automatically describe it in clear, captivating Urdu audio. It’s never been easier to experience your images in a whole new way!",
+        "box1_Title": "Upload an Image",
+        "box1_Content": "Select a photo from your device. No hassle—just choose and go!",
+        "box2_Title": "AI Converts Image to Audio",
+        "box2_Content": "Our advanced AI analyzes each detail and instantly narrates your image in fluent Urdu.",
+        "box3_Title": "Audio is Played!",
+        "box3_Content": "Press play to enjoy your personalized narration!"
+    },
+
+    "header" : {
+        "howItWorks" : "How it works?"
+    }
+}

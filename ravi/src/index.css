@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* In your main CSS file */
+/* @layer base {
+  [lang="ur"] body {
+    font-family: 'Noto Nastaliq Urdu', serif;
+    line-height: 1.8; /* Urdu generally needs more line spacing */
+  /* }
+} */ 
+
+/* :root{
+  font-family: 'Times New Roman', Times, serif;
+  color-scheme: light;
+
+} */
