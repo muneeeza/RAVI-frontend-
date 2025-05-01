@@ -6,3 +6,6 @@ pillow
 pytesseract
 easyocr
 google-cloud-texttospeech
+opencv-contrib-python
+arabic-reshaper
+python-bidi

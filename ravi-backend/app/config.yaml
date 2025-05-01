@@ -16,6 +16,3 @@ tts:
   voice: ur-PK-Wavenet-B
   language: ur-PK
   audio_encoding: MP3
-
-# GCP creds (can also be set via GOOGLE_APPLICATION_CREDENTIALS env var)
-gcp_credentials: /path/to/your/gcp-key.json
