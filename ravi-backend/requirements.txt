@@ -1,0 +1,11 @@
+python-multipart
+fastapi
+uvicorn[standard]
+pyyaml
+pillow
+pytesseract
+easyocr
+google-cloud-texttospeech
+opencv-contrib-python
+arabic-reshaper
+python-bidi

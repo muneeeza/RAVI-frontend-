@@ -36,25 +36,69 @@ const ImageUpload = () => {
 
   const audioRef = useRef(null);
 
-  // Placeholder OCR function
-  const handleOcr = (file) => {
-    setOcrLoading(true);
-    setTimeout(() => {
-      setOcrText('یہ اردو میں ڈیمنسٹریشن کے لیے مثال کا متن ہے'); // <-- DUMMY TEXT
-      setOcrLoading(false);
-    }, 1500);
-  };
+  // // Placeholder OCR function
+  // const handleOcr = (file) => {
+  //   setOcrLoading(true);
+  //   setTimeout(() => {
+  //     setOcrText('یہ اردو میں ڈیمنسٹریشن کے لیے مثال کا متن ہے'); // <-- DUMMY TEXT
+  //     setOcrLoading(false);
+  //   }, 1500);
+  // };
 
-  // Placeholder TTS function
-  const handleReadAloud = () => {
+  const handleOcr = async (file) => {
+    setOcrLoading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/ocr", {
+        method: "POST",
+        body: formData,
+      });
+      if (!res.ok) throw new Error("OCR failed");
+      const { text } = await res.json();
+      setOcrText(text);
+    } catch (err) {
+      setUploadError(t("uploadSection.errors.ocr"));
+    } finally {
+      setOcrLoading(false);
+    }
+  }
+
+  // // Placeholder TTS function
+  // const handleReadAloud = () => {
+  //   if (!ocrText) return;
+  //   setTtsLoading(true);
+  //   setTimeout(() => {
+  //     setAudioUrl(DEMO_AUDIO_URL); // <-- DUMMY AUDIO
+  //     setTtsLoading(false);
+  //     audioRef.current?.play();
+  //   }, 1000);
+  // };
+
+  // Real TTS → POST /tts
+  const handleReadAloud = async () => {
     if (!ocrText) return;
     setTtsLoading(true);
-    setTimeout(() => {
-      setAudioUrl(DEMO_AUDIO_URL); // <-- DUMMY AUDIO
+    try {
+      const res = await fetch("/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: ocrText }),
+      });
+      if (!res.ok) throw new Error("TTS error");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      setAudioUrl(url);
+      audioRef.current.src = url;
+      audioRef.current.play();
+    } catch (err) {
+      setUploadError(t("uploadSection.errors.tts"));
+    } finally {
       setTtsLoading(false);
-      audioRef.current?.play();
-    }, 1000);
+    }
   };
+
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
