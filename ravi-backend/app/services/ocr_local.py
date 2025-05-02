@@ -11,8 +11,6 @@ class LocalOCREngine(OCRService):
     def extract_text(self, image_bytes: bytes) -> str:
         # convert bytes -> image array, preprocess, run inference
         # e.g.:
-        # from PIL import Image
-        # import io
         # img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
         # text = self.model.predict(img)
         # return text

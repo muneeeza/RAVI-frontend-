@@ -4,7 +4,6 @@ import pytesseract
 import arabic_reshaper
 from bidi.algorithm import get_display
 
-import app.services.ocr
 from app.services.ocr import OCRService
 
 class TesseractOCREngine(OCRService):
