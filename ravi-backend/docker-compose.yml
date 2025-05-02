@@ -6,8 +6,7 @@ services:
       - "8000:8000"
     volumes:
       - ./config.yaml:/app/config.yaml:ro
-      - ./keys/service-account.json:/app/keys/service-account.json:ro
+      - ./secrets.yaml:/app/secrets.yaml:ro
     environment:
-      - GOOGLE_APPLICATION_CREDENTIALS=/app/keys/service-account.json
       - CONFIG_PATH=/app/config.yaml
     restart: unless-stopped

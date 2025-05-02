@@ -35,8 +35,3 @@ class ElevenLabsTTSService(TTSService):
         print("Urdu speech generated and saved as urdu_output.mp3")
 
         return response.content
-
-
-haffu = ElevenLabsTTSService()
-
-haffu.synthesize("آپ کیسے ہیں")

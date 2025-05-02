@@ -5,6 +5,7 @@ from app.services.ocr import OCRService
 from app.services.tts import TTSService
 from app.dependencies import get_ocr_service, get_tts_service
 import io
+import requests
 
 app = FastAPI(title="Ravi - Urdu Text Narrator")
 
@@ -20,7 +21,6 @@ async def ocr_endpoint(
     text = ocr.extract_text(img_bytes)
     return {"text": text}
 
-
 @app.post("/tts")
 async def tts_endpoint(
     payload: dict,
@@ -33,18 +33,27 @@ async def tts_endpoint(
     return StreamingResponse(io.BytesIO(audio), media_type="audio/mp3")
 
 
-@app.get("/health/gcp")
-async def health_gcp(tts: TTSService = Depends(get_tts_service)):
+@app.get("/health/tts")
+async def health_tts(tts: TTSService = Depends(get_tts_service)):
     """
     Simple endpoint to verify that the Text-to-Speech client can authenticate
-    and reach the GCP API.
+    and reach the TTS API.
     """
     try:
-        # list_voices makes a lightweight API call
-        voices = tts.client.list_voices().voices
-        # return a small sample so you know it worked
-        sample = [{"name": v.name, "language_codes": v.language_codes} for v in voices[:3]]
-        return {"gcp_tts_ok": True, "sample_voices": sample}
+        url = "https://api.elevenlabs.io/v1/voices"
+        headers = {
+        "xi-api-key": tts.API_KEY,
+        "Content-Type": "application/json"
+        }
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        voice_id = response.json()[voices][0]
+        
+        if voice_id['voice_id']:
+            return {"tts_ok": True}
+        else:
+            return {"tts_ok": False}
+    
     except Exception as e:
         # 503 Service Unavailable if auth or network fails
-        raise HTTPException(503, detail=f"GCP TTS health-check failed: {e}")
+        raise HTTPException(503, detail=f"TTS health-check failed: {e}")
