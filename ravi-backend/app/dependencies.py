@@ -23,12 +23,9 @@ def get_ocr_service() -> OCRService:
         raise RuntimeError(f"Unsupported OCR engine: {engine}")
 
 def get_tts_service() -> TTSService:
-    # ensure GCP creds are loaded
-    if settings.GCP_CREDENTIALS_JSON:
-        import os
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = settings.GCP_CREDENTIALS_JSON
-    return TTSService(
-        language=settings.TTS_LANGUAGE,
-        voice=settings.TTS_VOICE,
-        audio_encoding=settings.TTS_AUDIO_ENCODING,
-    )
+    if settings.MODEL_ID == "eleven_multilingual_v1":
+        from app.services.tts_11labs import ElevenLabsTTSService
+        return ElevenLabsTTSService()
+    else:
+        raise RuntimeError(f"Unsupported TTS model: {settings.MODEL_ID}")
+    

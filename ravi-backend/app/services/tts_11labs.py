@@ -1,30 +1,42 @@
 import requests
 
-API_KEY = ""
-VOICE_ID = ""  
+from app.services.tts import TTSService
+from app.config import settings
 
-url = f"https://api.elevenlabs.io/v1/text-to-speech/{VOICE_ID}"
+class ElevenLabsTTSService(TTSService):
+    def __init__(self):
+        self.API_KEY            = settings.ELEVENLABS_API_KEY
 
-headers = {
-    "xi-api-key": API_KEY,
-    "Content-Type": "application/json"
-}
+        self.MODEL_ID           = settings.MODEL_ID
+        self.VOICE_ID           = settings.VOICE_ID
+        self.VOICE_SETTINGS     = settings.VOICE_SETTINGS
 
-data = {
-    "text": "آپ کیسے ہیں",
-    "model_id": "eleven_multilingual_v1",
-    "voice_settings": {
-        "stability": 0.7,           # smoother speech
-        "similarity_boost": 0.85    # closer to the original voice tone
-    }
-}
+        self.URL                = f"https://api.elevenlabs.io/v1/text-to-speech/{self.VOICE_ID}"
 
-response = requests.post(url, headers=headers, json=data)
+    def synthesize(self, text: str = "آپ کیسے ہیں") -> bytes:
+        
+        headers = {
+            "xi-api-key": self.API_KEY,
+            "Content-Type": "application/json"
+        }
 
-# Save the audio file
-with open("urdu_output.mp3", "wb") as f:
-    f.write(response.content)
+        data = {
+            "text": text,
+            "model_id": self.MODEL_ID,
+            "voice_settings": self.VOICE_SETTINGS
+        }
+        
+        response = requests.post(self.URL, headers=headers, json=data)
 
-print("Urdu speech generated and saved as urdu_output.mp3")
+        # Save the audio file
+        with open("urdu_output.mp3", "wb") as f:
+            f.write(response.content)
+
+        print("Urdu speech generated and saved as urdu_output.mp3")
+
+        return response.content
 
 
+haffu = ElevenLabsTTSService()
+
+haffu.synthesize("آپ کیسے ہیں")
