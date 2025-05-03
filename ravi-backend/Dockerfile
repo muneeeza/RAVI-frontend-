@@ -1,29 +1,30 @@
-# Use an official Python runtime as a parent image
-FROM python:3.11-slim
+# Base image with PyTorch + CUDA 11.8 + cuDNN8
+FROM pytorch/pytorch:2.2.1-cuda11.8-cudnn8-runtime
 
-# Install system deps: Tesseract + Urdu pack (if you’re using Tesseract)
+# Install system dependencies (Tesseract + Urdu support)
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-      tesseract-ocr tesseract-ocr-urd && \
+        tesseract-ocr tesseract-ocr-urd curl && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Create app directory
+# Set working directory
 WORKDIR /app
 
-# Copy Python dependency files
-COPY requirements.txt ./
+# Pre-copy and install Python dependencies
+COPY requirements.txt .
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
+    # pip install --no-cache-dir -r requirements.txt
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy everything else
+# Copy app source code
 COPY . .
 
-# Expose port
+# Expose FastAPI port
 EXPOSE 8000
 
-# By default, point at config.yaml in /app
+# Optional ENV for config path
 ENV CONFIG_PATH=/app/config.yaml
 
-# Run the uvicorn server
+# Run server
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

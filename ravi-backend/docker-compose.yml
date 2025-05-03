@@ -1,12 +1,31 @@
-version: "3.8"
+version: "3.9"
 services:
-  ocr-tts-backend:
+  # ocr-tts-backend:
+  #   build: .
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - ./config.yaml:/app/config.yaml:ro
+  #     - ./secrets.yaml:/app/secrets.yaml:ro
+  #   environment:
+  #     - CONFIG_PATH=/app/config.yaml
+  #   restart: unless-stopped
+
+  app:
     build: .
+    container_name: fastapi-tts-gpu
     ports:
       - "8000:8000"
     volumes:
       - ./config.yaml:/app/config.yaml:ro
-      - ./secrets.yaml:/app/secrets.yaml:ro
+      - ./secrets.yaml:/app/secrets.yaml:ro    
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+    # runtime: nvidia
     environment:
       - CONFIG_PATH=/app/config.yaml
-    restart: unless-stopped

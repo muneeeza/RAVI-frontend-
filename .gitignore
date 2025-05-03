@@ -2,6 +2,7 @@ secrets.yaml
 easyocr_test.py
 pytesseract_test.py
 urdu_output.mp3
+.vscode
 
 # Logs
 logs

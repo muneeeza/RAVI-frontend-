@@ -1,7 +1,8 @@
 from app.config import settings
 from app.services.ocr_tesseract import TesseractOCREngine
 from app.services.ocr_easyocr import EasyOCREngine
-from app.services.ocr import LocalOCREngine, OCRService
+from app.services.ocr_local import LocalOCREngine
+from app.services.ocr import OCRService
 from app.services.tts import TTSService
 
 def get_ocr_service() -> OCRService:
