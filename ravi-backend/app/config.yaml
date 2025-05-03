@@ -1,6 +1,7 @@
 # OCR settings: "tesseract", "easyocr", or "custom"
 ocr:
   engine: tesseract
+  
   # only used by tesseract
   tesseract_cmd: /usr/bin/tesseract
   lang: urd
