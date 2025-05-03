@@ -28,6 +28,9 @@
     },
 
     "header" : {
-        "howItWorks" : "How it works?"
+        "howItWorks" : "How it works?",
+        "ttsCheck": "Checking TTS",
+        "ttsOK": "TTS LIVE",
+        "ttsError": "TTS OFF"
     }
 }

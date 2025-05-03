@@ -1,0 +1,25 @@
+# OCR settings: "tesseract", "easyocr", or "custom"
+ocr:
+  engine: tesseract
+  
+  # only used by tesseract
+  tesseract_cmd: /usr/bin/tesseract
+  lang: urd
+
+  # only used if engine: custom
+  # model_path: /path/to/your/custom/ocr/model
+
+  # only used by easyocr
+  # gpu: false
+
+# TTS settings
+tts:
+    # voice: ur-PK-Wavenet-B
+    language: ur-PK
+    audio_encoding: MP3
+    model_id: eleven_multilingual_v1
+    voice_id: pNInz6obpgDQGcFmaJgB
+    api_key: 
+    voice_settings:
+      stability: 0.7            # smoother speech
+      similarity_boost: 0.85    # closer to the original voice tone

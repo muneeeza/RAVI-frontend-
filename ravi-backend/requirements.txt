@@ -1,0 +1,10 @@
+python-multipart
+fastapi
+uvicorn[standard]
+pyyaml
+pillow
+pytesseract
+easyocr
+arabic-reshaper
+python-bidi
+# elevenlabs
