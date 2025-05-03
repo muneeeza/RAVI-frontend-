@@ -80,6 +80,7 @@ const ImageUpload = () => {
   const handleReadAloud = async () => {
     if (!ocrText) return;
     setTtsLoading(true);
+    // console.log("Sending text:", ocrText); // should show readable Urdu like: "آپ کیسے ہیں"
     try {
       const res = await fetch("/tts", {
         method: "POST",
@@ -94,6 +95,7 @@ const ImageUpload = () => {
   
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
+      // console.log(url)
       setAudioUrl(url);
   
       // // Clean up previous audio
@@ -104,8 +106,12 @@ const ImageUpload = () => {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
       audioRef.current.src = url;
-      audioRef.current.play();
-      
+      try {
+        await audioRef.current.play();
+      } catch (err) {
+        console.error("Playback failed:", err);
+        alert("Playback blocked — please click to trigger audio.");
+      }
     } catch (err) {
       console.error(err);
       setUploadError(t("uploadSection.errors.tts"));

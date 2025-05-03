@@ -3,6 +3,7 @@ from PIL import Image
 import pytesseract
 import arabic_reshaper
 from bidi.algorithm import get_display
+import unicodedata
 
 from app.services.ocr import OCRService
 
@@ -19,10 +20,15 @@ class TesseractOCREngine(OCRService):
         raw = raw.replace('\n','').strip()
 
         # 1) Arabic‐reshape: picks correct contextual glyphs
-        reshaped = arabic_reshaper.reshape(raw)
+        # reshaped = arabic_reshaper.reshape(raw)
 
         # 2) BiDi reorder: make it display right-to-left
         # display_text = get_display(reshaped)
-        # return display_text
+        # display_text = get_display(raw)
 
-        return reshaped
+        # display_text = unicodedata.normalize("NFC", display_text)
+        # return display_text
+        
+        raw = unicodedata.normalize("NFC", raw)
+
+        return raw
