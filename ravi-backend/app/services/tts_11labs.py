@@ -31,7 +31,5 @@ class ElevenLabsTTSService(TTSService):
         # Save the audio file
         with open("urdu_output.mp3", "wb") as f:
             f.write(response.content)
-
-        print("Urdu speech generated and saved as urdu_output.mp3")
-
+        
         return response.content

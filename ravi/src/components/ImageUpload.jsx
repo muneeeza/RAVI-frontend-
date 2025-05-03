@@ -86,19 +86,34 @@ const ImageUpload = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: ocrText }),
       });
-      if (!res.ok) throw new Error("TTS error");
+  
+      if (!res.ok) {
+        const err = await res.text();
+        throw new Error(`TTS error: ${err}`);
+      }
+  
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       setAudioUrl(url);
+  
+      // // Clean up previous audio
+      // if (audioRef.current.src) {
+      //   URL.revokeObjectURL(audioRef.current.src);
+      // }
+  
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
       audioRef.current.src = url;
       audioRef.current.play();
+      
     } catch (err) {
+      console.error(err);
       setUploadError(t("uploadSection.errors.tts"));
     } finally {
       setTtsLoading(false);
     }
   };
-
+  
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];

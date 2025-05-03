@@ -18,42 +18,42 @@ const Header = () => {
     }
   };
 
-  // ======= HEALTH CHECK CODE START =======
-  const [ttsOk, setTtsOk] = useState(null);
+  // // ======= HEALTH CHECK CODE START =======
+  // const [ttsOk, setTtsOk] = useState(null);
 
-  useEffect(() => {
-    fetch('/health/tts')
-      .then((res) => {
-        if (!res.ok) throw new Error();
-        return res.json();
-      })
-      .then((data) => setTtsOk(true))
-      .catch(() => setTtsOk(false));
-  }, []);
+  // useEffect(() => {
+  //   fetch('/health/tts')
+  //     .then((res) => {
+  //       if (!res.ok) throw new Error();
+  //       return res.json();
+  //     })
+  //     .then((data) => setTtsOk(true))
+  //     .catch(() => setTtsOk(false));
+  // }, []);
 
-  const renderHealthStatus = () => {
-    return (
-      <div className="flex items-center space-x-2 ml-4">
-        <div
-          className={`w-3 h-3 rounded-full ${
-            ttsOk === null
-              ? 'bg-gray-400 animate-pulse'
-              : ttsOk
-              ? 'bg-green-500'
-              : 'bg-red-500'
-          }`}
-        />
-        <span className="text-xs text-white">
-          {ttsOk === null
-           ? t('header.ttsCheck')
-           : ttsOk
-           ? t('header.ttsOK')
-           : t('header.ttsError')}
-        </span>
-      </div>
-    );
-  };
-  // ======= HEALTH CHECK CODE END =======
+  // const renderHealthStatus = () => {
+  //   return (
+  //     <div className="flex items-center space-x-2 ml-4">
+  //       <div
+  //         className={`w-3 h-3 rounded-full ${
+  //           ttsOk === null
+  //             ? 'bg-gray-400 animate-pulse'
+  //             : ttsOk
+  //             ? 'bg-green-500'
+  //             : 'bg-red-500'
+  //         }`}
+  //       />
+  //       <span className="text-xs text-white">
+  //         {ttsOk === null
+  //          ? t('header.ttsCheck')
+  //          : ttsOk
+  //          ? t('header.ttsOK')
+  //          : t('header.ttsError')}
+  //       </span>
+  //     </div>
+  //   );
+  // };
+  // // ======= HEALTH CHECK CODE END =======
 
   return (
     <AppBar
@@ -86,9 +86,9 @@ const Header = () => {
           </Button>
         </div>
 
-        <div>
+        {/* <div>
           {renderHealthStatus()}
-        </div>
+        </div> */}
 
         {/* Right Section: Logo */}
         <div className="flex items-center">

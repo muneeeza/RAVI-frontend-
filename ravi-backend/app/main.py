@@ -1,11 +1,10 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException, Depends
+from fastapi import FastAPI, UploadFile, File, HTTPException, Depends, Body
 from fastapi.responses import StreamingResponse
 from app.schemas import OCRResponse
 from app.services.ocr import OCRService
 from app.services.tts import TTSService
 from app.dependencies import get_ocr_service, get_tts_service
 import io
-import requests
 
 app = FastAPI(title="Ravi - Urdu Text Narrator")
 
@@ -21,39 +20,46 @@ async def ocr_endpoint(
     text = ocr.extract_text(img_bytes)
     return {"text": text}
 
+
 @app.post("/tts")
 async def tts_endpoint(
-    payload: dict,
+    payload: dict = Body(...),
     tts: TTSService = Depends(get_tts_service),
 ):
-    text = payload.get("text", "")
+    text = payload.get("text", "").strip()
     if not text:
-        raise HTTPException(400, "No text provided")
-    audio = tts.synthesize(text)
-    return StreamingResponse(io.BytesIO(audio), media_type="audio/mp3")
+        raise HTTPException(status_code=400, detail="No text provided")
 
-
-@app.get("/health/tts")
-async def health_tts(tts: TTSService = Depends(get_tts_service)):
-    """
-    Simple endpoint to verify that the Text-to-Speech client can authenticate
-    and reach the TTS API.
-    """
     try:
-        url = "https://api.elevenlabs.io/v1/voices"
-        headers = {
-        "xi-api-key": tts.API_KEY,
-        "Content-Type": "application/json"
-        }
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()
-        voice_id = response.json()[voices][0]
-        
-        if voice_id['voice_id']:
-            return {"tts_ok": True}
-        else:
-            return {"tts_ok": False}
-    
+        audio = tts.synthesize(text)
     except Exception as e:
-        # 503 Service Unavailable if auth or network fails
-        raise HTTPException(503, detail=f"TTS health-check failed: {e}")
+        raise HTTPException(status_code=500, detail=f"TTS synthesis failed: {str(e)}")
+
+    return StreamingResponse(io.BytesIO(audio), media_type="audio/mpeg")
+
+
+# @app.get("/health/tts")
+# async def health_tts(tts: TTSService = Depends(get_tts_service)):
+#     """
+#     Simple endpoint to verify that the Text-to-Speech client can authenticate
+#     and reach the TTS API.
+#     """
+#     try:
+#         url = "https://api.elevenlabs.io/v1/voices"
+#         headers = {
+#         "xi-api-key": tts.API_KEY,
+#         "Content-Type": "application/json"
+#         }
+#         response = requests.get(url, headers=headers)
+     
+#         response.raise_for_status()
+#         voice_id = response.json()[voices][0]
+        
+#         if voice_id['voice_id']:
+#             return {"ok": True}
+#         else:
+#             return {"ok": False}
+    
+#     except Exception as e:
+#         # 503 Service Unavailable if auth or network fails
+#         raise HTTPException(503, detail=f"TTS health-check failed: {e}")

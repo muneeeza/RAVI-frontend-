@@ -22,6 +22,7 @@ class TesseractOCREngine(OCRService):
         reshaped = arabic_reshaper.reshape(raw)
 
         # 2) BiDi reorder: make it display right-to-left
-        display_text = get_display(reshaped)
+        # display_text = get_display(reshaped)
+        # return display_text
 
-        return display_text
+        return reshaped
