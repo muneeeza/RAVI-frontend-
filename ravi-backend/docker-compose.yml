@@ -2,7 +2,7 @@ version: "3.9"
 services:
   app:
     build: .
-    container_name: fastapi-tts-gpu
+    container_name: ravi-backend
     ports:
       - "8000:8000"
     volumes:
