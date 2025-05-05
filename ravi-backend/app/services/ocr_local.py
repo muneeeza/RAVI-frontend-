@@ -3,6 +3,9 @@ import  numpy as np
 from    PIL import Image
 import  tensorflow as tf
 
+import  logging
+logging.getLogger('tensorflow').disabled = True
+
 from app.services.ocr import OCRService
 from app.services.ocr import index_to_char
 
@@ -23,8 +26,8 @@ class LocalOCREngine(OCRService):
         input = self._preprocess(image_bytes)                 # shape (1,H,W,3)
         logits = self.model.predict(input)                    # (1, T, C)
 
-        chars = [index_to_char[idx] for idx in logits if idx > 0]
-        # text  = np.argmax(logits, axis=2)[0]
+        output  = np.argmax(logits, axis=2)[0]
+        chars = [index_to_char[idx] for idx in output if idx > 0]
         text  = "".join(chars)
 
         return text
