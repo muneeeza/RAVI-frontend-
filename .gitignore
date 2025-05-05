@@ -4,6 +4,7 @@ pytesseract_test.py
 urdu_output.mp3
 .vscode
 *.mp3
+*.h5
 
 # Logs
 logs

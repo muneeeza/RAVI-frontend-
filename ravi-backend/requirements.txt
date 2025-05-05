@@ -5,6 +5,3 @@ pyyaml
 pillow
 pytesseract
 easyocr
-arabic-reshaper
-python-bidi
-# elevenlabs
