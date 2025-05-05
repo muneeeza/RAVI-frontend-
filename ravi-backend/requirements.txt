@@ -5,3 +5,4 @@ pyyaml
 pillow
 pytesseract
 easyocr
+tensorflow

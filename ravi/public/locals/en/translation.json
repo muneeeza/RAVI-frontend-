@@ -6,7 +6,7 @@
     "btnText2": "Upload",
 
     "uploadSection":{
-         "title": "Accepted Formats: PDF, JPG, PNG",
+         "title": "Accepted Format: PNG",
          "loading": "Processing...",
          "heading": "Extracted Text",
         "popUpHeading": "How to use RAVI?",
