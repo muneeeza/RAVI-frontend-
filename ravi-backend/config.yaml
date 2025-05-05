@@ -1,13 +1,13 @@
 # OCR settings: "tesseract", "easyocr", or "custom"
 ocr:
-  engine: tesseract
+  engine: custom
   
   # only used by tesseract
   tesseract_cmd: /usr/bin/tesseract
   lang: urd
 
   # only used if engine: custom
-  # model_path: /path/to/your/custom/ocr/model
+  model_path: /app/app/models/cnn_gru_model.h5
 
   # only used by easyocr
   # gpu: false
