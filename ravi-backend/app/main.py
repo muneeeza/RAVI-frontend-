@@ -37,29 +37,3 @@ async def tts_endpoint(
 
     return StreamingResponse(io.BytesIO(audio), media_type="audio/mpeg")
 
-
-# @app.get("/health/tts")
-# async def health_tts(tts: TTSService = Depends(get_tts_service)):
-#     """
-#     Simple endpoint to verify that the Text-to-Speech client can authenticate
-#     and reach the TTS API.
-#     """
-#     try:
-#         url = "https://api.elevenlabs.io/v1/voices"
-#         headers = {
-#         "xi-api-key": tts.API_KEY,
-#         "Content-Type": "application/json"
-#         }
-#         response = requests.get(url, headers=headers)
-     
-#         response.raise_for_status()
-#         voice_id = response.json()[voices][0]
-        
-#         if voice_id['voice_id']:
-#             return {"ok": True}
-#         else:
-#             return {"ok": False}
-    
-#     except Exception as e:
-#         # 503 Service Unavailable if auth or network fails
-#         raise HTTPException(503, detail=f"TTS health-check failed: {e}")

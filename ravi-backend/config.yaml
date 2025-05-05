@@ -14,7 +14,6 @@ ocr:
 
 # TTS settings
 tts:
-    # voice: ur-PK-Wavenet-B
     language: ur-PK
     audio_encoding: MP3
     model_id: eleven_multilingual_v1

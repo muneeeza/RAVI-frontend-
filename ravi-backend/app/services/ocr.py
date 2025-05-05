@@ -20,7 +20,6 @@ extended_chars = [
 
 urdu_chars = urdu_chars + extended_chars
 
-
 # Create index mapping
 char_to_index = {char: idx + 1 for idx, char in enumerate(urdu_chars)}
 index_to_char = {idx: char for char, idx in char_to_index.items()}
