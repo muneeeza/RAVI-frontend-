@@ -6,3 +6,8 @@ pillow
 pytesseract
 easyocr
 tensorflow
+torch
+torchvision
+torchaudio
+scikit-learn
+scikit-image
