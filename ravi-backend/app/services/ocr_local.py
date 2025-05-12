@@ -18,13 +18,12 @@ class LocalOCREngine(OCRService):
         self.img_height = img_height
         self.img_width = img_width
         self.model_path = model_path
-
         ext = os.path.splitext(model_path)[1].lower()
         self.model_type = None
 
         if ext == '.h5':
-            self.image_height = 128
             self.model_type = 'tensorflow'
+            self.device = "/GPU:0" if tf.config.list_physical_devices('GPU') else "/CPU:0"
             self.model = tf.keras.models.load_model(model_path, compile=False)
         elif ext == '.pth':
             self.model_type = 'pytorch'
@@ -36,14 +35,9 @@ class LocalOCREngine(OCRService):
     def extract_text(self, image_bytes: bytes) -> str:
 
         if self.model_type == 'tensorflow':
-            img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
-            img = img.resize((self.img_width, self.img_height), Image.BILINEAR)
-            arr = np.array(img).astype(np.float32) / 255.0  # Normalize to [0,1]
-            input_tensor = tf.expand_dims(arr, axis=0)  # shape (1,H,W,3)
-            logits = self.model.predict(input_tensor)   # (1, T, C)
-            output = np.argmax(logits, axis=2)[0]
-            chars = [index_to_char[idx] for idx in output if idx > 0]
-            return "".join(chars)
+            image = Image.open(io.BytesIO(image_bytes)).convert("L")
+            recognized_text = recognize_tf_text(image=image, model=self.model, index_to_char=index_to_char, image_height=self.img_height, image_width=self.img_width)
+            return recognized_text
 
         elif self.model_type == 'pytorch':
             image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
@@ -53,39 +47,62 @@ class LocalOCREngine(OCRService):
             raise RuntimeError("Model type not supported or not loaded.")
 
 
-# import  io
-# import  numpy as np
-# from    PIL import Image
-# import  tensorflow as tf
+def preprocess_image(image, target_width=128, target_height=32):
+    """
+    Standardized preprocessing for OCR images
 
-# import  logging
-# logging.getLogger('tensorflow').disabled = True
+    Args:
+        image: Either a file path or a PIL Image object
+        target_width: Width to resize to
+        target_height: Height to resize to
 
-# from app.services.ocr import OCRService
-# from app.services.ocr import index_to_char
+    Returns:
+        Preprocessed numpy array ready for model prediction
+    """
+    # Handle both file paths and PIL Image objects
+    if isinstance(image, str):
+        # It's a file path
+        img = Image.open(image).convert('L')
+    else:
+        # It's already a PIL Image object
+        img = image.convert('L')  # Ensure grayscale
 
+    # Resize with consistent method
+    img = img.resize((target_width, target_height), Image.BILINEAR)
 
-# class LocalOCREngine(OCRService):
-#     def __init__(self, model_path: str, img_height=128, img_width=128):
-#         self.img_height = img_height
-#         self.img_width = img_width
-#         self.model = tf.keras.models.load_model(model_path, compile=False)
+    # Convert to numpy array and normalize
+    img_array = np.array(img).astype(np.float32) / 255.0
 
-#     def _preprocess(self, image_bytes: bytes) -> tf.Tensor:
-#         img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
-#         img = img.resize((self.img_width, self.img_height), Image.BILINEAR)
-#         arr = np.array(img).astype(np.float32) / 255.0
-#         return tf.expand_dims(arr, axis=0)  # shape: (1, H, W, 3)
+    # Add batch dimension
+    img_array = np.expand_dims(img_array, axis=0)
 
-#     def extract_text(self, image_bytes: bytes) -> str:
-#         input = self._preprocess(image_bytes)                 # shape (1,H,W,3)
-#         logits = self.model.predict(input)                    # (1, T, C)
+#    # Ensure proper shape (batch, height, width, channels)
+#    if len(img_array.shape) == 3:  # (batch, height, width)
+#         img_array = np.expand_dims(img_array, axis=-1)  # Add channel dimension
+    
+    return img_array
 
-#         output  = np.argmax(logits, axis=2)[0]
-#         chars = [index_to_char[idx] for idx in output if idx > 0]
-#         text  = "".join(chars)
-
-#         return text
+# Function to recognize text in an image
+def recognize_tf_text(image, model, index_to_char, image_height=32, image_width=128):
+    img_array = preprocess_image(image, target_width=image_width, target_height=image_height)
+    
+    # Get prediction
+    prediction = model.predict(img_array, verbose=0)
+    
+    # Decode prediction (greedy)
+    indices = np.argmax(prediction[0], axis=1)
+    
+    # Merge repeated characters
+    merged = []
+    prev = -1
+    for idx in indices:
+        if idx != prev and idx != 0:  # Skip blanks and repeats
+            merged.append(idx)
+        prev = idx
+    
+    # Convert indices to characters
+    text = ''.join([index_to_char[int(idx)] for idx in merged])
+    return text
 
 
 import torch.nn as nn

@@ -8,7 +8,9 @@ ocr:
 
   # only used if engine: custom
   # model_path: /app/app/models/cnn_gru_model.h5
-  model_path: /app/app/models/crnn_model.pth
+  # model_path: /app/app/models/crnn_model.pth
+  model_path: /app/app/models/tf1_crnn_model.h5
+
 
   # only used by easyocr
   # gpu: false
