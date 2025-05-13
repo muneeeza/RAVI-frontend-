@@ -7,7 +7,7 @@ This is the backend for the RAVI project. It is built with FastAPI.
 1.  Clone the repository.
 2.  Install dependencies: docker
 3.  Replace key in ```secrets.yaml``` with your key.
-4.  Put your ```<model_name>.h5``` in the app/models folder.
+4.  Put your ```<model_name>.h5``` in the app/models folder, or extract any zips in there.
 5.  Run command:         ```cd ravi-backend``` 
                 and then ```docker compose up --build```
 6.  In new terminal:     ```cd ravi```
